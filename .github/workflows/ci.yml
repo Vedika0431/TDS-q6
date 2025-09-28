@@ -1,0 +1,22 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main  # Trigger action on push to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: 23f3000802@ds.study.iitm.ac.in
+        run: echo "Hello, world!"
+      
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y curl
