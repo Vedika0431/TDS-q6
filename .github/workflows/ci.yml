@@ -3,7 +3,7 @@ name: CI with Caching
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main  # Trigger action on push to the main branch
   pull_request:
     branches:
       - main  # Trigger on pull requests to the main branch
@@ -22,7 +22,7 @@ jobs:
           python-version: '3.8'
 
       - name: Cache dependencies
-        id: cache-python-dependencies
+        id: cache-python-dependencies  # Use an ID here to reference in next step
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
@@ -32,7 +32,7 @@ jobs:
             cache-a8379a1-
 
       - name: Prime Cache - cache-a8379a1
-        run: echo "Cache hit: ${{ steps.cache-python-dependencies.outputs.cache-hit }}"
+        run: echo "Cache hit: ${{ steps.cache-python-dependencies.outputs.cache-hit }}"  # Correct way to reference cache-hit
 
       - name: Install dependencies
         run: |
@@ -41,5 +41,4 @@ jobs:
 
       - name: Run tests
         run: |
-          # Add your test command here
           pytest
