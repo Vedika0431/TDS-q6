@@ -1,22 +1,45 @@
-name: CI Workflow
+name: CI with Caching
 
 on:
   push:
     branches:
-      - main  # Trigger action on push to the main branch
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: 23f3000802@ds.study.iitm.ac.in
-        run: echo "Hello, world!"
-      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Cache dependencies
+        id: cache-python-dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: cache-a8379a1-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            cache-a8379a1-${{ runner.os }}-
+            cache-a8379a1-
+
+      - name: Prime Cache - cache-a8379a1
+        run: echo "Cache hit: ${{ steps.cache-python-dependencies.outputs.cache-hit }}"
+
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y curl
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          # Add your test command here
+          pytest
